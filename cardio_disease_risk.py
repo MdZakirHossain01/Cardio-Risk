@@ -256,6 +256,9 @@ print(f"\nTest Loss: {loss:.4f}, Test Accuracy: {accuracy:.4f}")
 
 # In[24]:
 
+# Import TensorFlow layers
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
 
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
