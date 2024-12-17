@@ -352,24 +352,23 @@ dsd
 
 
 from sklearn.ensemble import StackingClassifier
-from xgboost import XGBClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from xgboost import XGBClassifier
 
-# Update base models with reduced complexity
+# Define base models
 base_models = [
-    ('xgb', XGBClassifier(n_estimators=100, learning_rate=0.05, max_depth=5, eval_metric='logloss')),
+    ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss')),
     ('rf', RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)),
-    ('gb', GradientBoostingClassifier(n_estimators=100, learning_rate=0.05, max_depth=4, random_state=42)),
-    ('logreg', LogisticRegression(max_iter=1000, solver='liblinear'))
+    ('gb', GradientBoostingClassifier(n_estimators=100, learning_rate=0.05, max_depth=4, random_state=42))
 ]
 
-
-# Create Stacking Classifier
+# Create and train Stacking Classifier
 ensemble = StackingClassifier(
     estimators=base_models, 
-    final_estimator=LogisticRegression(max_iter=2000, solver='liblinear')
+    final_estimator=LogisticRegression(max_iter=1000, solver='liblinear')
 )
+
 
 # Train and Evaluate
 ensemble.fit(X_train, y_train)
