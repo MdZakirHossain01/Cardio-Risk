@@ -9,6 +9,10 @@
 # Importing necessary libraries
 import pandas as pd
 import numpy as np
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
+from tensorflow.keras.optimizers import Adam
+
 
 # Loading the dataset
 file_path = 'cardio_train.csv'  # Update this path to your dataset location
