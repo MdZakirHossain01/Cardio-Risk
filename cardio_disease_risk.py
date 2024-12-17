@@ -305,7 +305,7 @@ print(f"\nUpdated Test Loss: {loss:.4f}, Updated Test Accuracy: {accuracy:.4f}")
 # In[28]:
 
 
-get_ipython().system('pip install xgboost')
+
 
 
 # In[30]:
