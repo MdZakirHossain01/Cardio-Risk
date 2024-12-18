@@ -361,13 +361,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from xgboost import XGBClassifier
 
-# Define base models ensuring compatibility
+# Define compatible base models
 base_models = [
     ('xgb', XGBClassifier(n_estimators=100, learning_rate=0.05, max_depth=5, eval_metric='logloss', use_label_encoder=False)),
     ('rf', RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)),
     ('gb', GradientBoostingClassifier(n_estimators=100, learning_rate=0.05, max_depth=4, random_state=42))
 ]
-
 # Create and train Stacking Classifier
 ensemble = StackingClassifier(
     estimators=base_models, 
