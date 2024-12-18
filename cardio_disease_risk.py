@@ -186,16 +186,21 @@ plt.show()
 
 # In[18]:
 
-
+# Import necessary libraries
+from sklearn.ensemble import StackingClassifier
+from xgboost import XGBClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# Features and target variable
-X = df.drop(columns=['cardio'])  # Dropping the target variable
-y = df['cardio']  # Target variable
-
-# Splitting the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+# Prepare the data
+X = df.drop(columns=['cardio'])
+y = df['cardio']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 print("\nData Split Completed:")
 print(f"Training Data Shape: {X_train.shape}, Training Labels Shape: {y_train.shape}")
@@ -356,9 +361,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from xgboost import XGBClassifier
 
-# Define base models
+# Define base models ensuring compatibility
 base_models = [
-    ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss')),
+    ('xgb', XGBClassifier(n_estimators=100, learning_rate=0.05, max_depth=5, eval_metric='logloss', use_label_encoder=False)),
     ('rf', RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)),
     ('gb', GradientBoostingClassifier(n_estimators=100, learning_rate=0.05, max_depth=4, random_state=42))
 ]
@@ -366,14 +371,19 @@ base_models = [
 # Create and train Stacking Classifier
 ensemble = StackingClassifier(
     estimators=base_models, 
-    final_estimator=LogisticRegression(max_iter=1000, solver='liblinear')
+    final_estimator=LogisticRegression(max_iter=1000, solver='liblinear'),
+    n_jobs=-1
 )
 
-
-# Train and Evaluate
+# Train the model
 ensemble.fit(X_train, y_train)
-ensemble_accuracy = ensemble.score(X_test, y_test)
-print(f"\nImproved Ensemble Model Test Accuracy: {ensemble_accuracy:.4f}")
+
+# Evaluate the model
+y_pred = ensemble.predict(X_test)
+ensemble_accuracy = accuracy_score(y_test, y_pred)
+
+print(f"\nFixed Ensemble Model Test Accuracy: {ensemble_accuracy:.4f}")
+
 
 
 # In[ ]:
